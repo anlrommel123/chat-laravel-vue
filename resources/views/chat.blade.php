@@ -2,22 +2,20 @@
 
 @section('content')
     <div class="container">
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-                <div class="panel panel-default">
-                    <div class="panel-heading">Chats</div>
-
-                    <div class="panel-body">
-                        <!-- <chat-messages :messages="messages"></chat-messages> -->
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                       <h4>Chats</h4> 
                     </div>
-                    <div class="panel-footer">
-                        <!-- <chat-form
-                            v-on:messagesent="addMessage"
-                            :user="{{ Auth::user() }}"
-                        ></chat-form> -->
+                    <div class="card-body">
+                        <chat-messages :messages="messages" />
+                    </div>
+                    <div class="card-footer text-muted">
+                        <chat-form @messagesent="addMessage" :user="{{ Auth::user() }}" />
                     </div>
                 </div>
             </div>
         </div>
     </div>
-@endsection
+@endsection  

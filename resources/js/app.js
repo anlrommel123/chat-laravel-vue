@@ -22,7 +22,7 @@ const app = new Vue({
         messages: []
     },
 
-    created() {
+    mounted() {
         this.getMessages()
 
         Echo.private('chat')

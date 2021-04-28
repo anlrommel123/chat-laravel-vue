@@ -11,6 +11,13 @@
     </ul>
 </template>
 
+<style scoped>
+    .list-group {
+        height: 400px;
+        overflow: auto;
+    }
+</style>
+
 <script>
 export default {
     props: ['messages']

@@ -9,7 +9,7 @@
                        <h4>Chats</h4> 
                     </div>
                     <div class="card-body">
-                        <chat-messages :messages="messages" />
+                        <chat-messages :messages="messages" :id="{{ Auth::id() }}" />
                     </div>
                     <div class="card-footer text-muted">
                         <chat-form @messagesent="addMessage" :user="{{ Auth::user() }}" />

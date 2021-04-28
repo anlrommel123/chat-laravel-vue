@@ -1,8 +1,8 @@
 <template>
     <ul class="list-group">
-        <li class="list-group-item" v-for="(message, index) in messages" :key="index">
+        <li class="list-group-item" v-for="(message, index) in messages" :class="{ 'text-primary': id === message.user.id }" :key="index">
             <div class="message-name">
-                <strong>{{ message.user.name }}</strong>
+                <strong>{{ id === message.user.id ? 'You' : message.user.name }}</strong>
             </div>
             <div class="message-body">
                 {{ message.message }}
@@ -20,6 +20,6 @@
 
 <script>
 export default {
-    props: ['messages']
+    props: ['messages', 'id']
 }
 </script>

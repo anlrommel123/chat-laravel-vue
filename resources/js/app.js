@@ -19,7 +19,8 @@ const app = new Vue({
     el: '#app',
 
     data: {
-        messages: []
+        messages: [],
+        id: 1
     },
 
     mounted() {

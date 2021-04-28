@@ -1967,7 +1967,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['messages']
+  props: ['messages', 'id']
 });
 
 /***/ }),
@@ -44472,15 +44472,27 @@ var render = function() {
     "ul",
     { staticClass: "list-group" },
     _vm._l(_vm.messages, function(message, index) {
-      return _c("li", { key: index, staticClass: "list-group-item" }, [
-        _c("div", { staticClass: "message-name" }, [
-          _c("strong", [_vm._v(_vm._s(message.user.name))])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "message-body" }, [
-          _vm._v("\n            " + _vm._s(message.message) + "\n        ")
-        ])
-      ])
+      return _c(
+        "li",
+        {
+          key: index,
+          staticClass: "list-group-item",
+          class: { "text-primary": _vm.id === message.user.id }
+        },
+        [
+          _c("div", { staticClass: "message-name" }, [
+            _c("strong", [
+              _vm._v(
+                _vm._s(_vm.id === message.user.id ? "You" : message.user.name)
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "message-body" }, [
+            _vm._v("\n            " + _vm._s(message.message) + "\n        ")
+          ])
+        ]
+      )
     }),
     0
   )
@@ -56678,7 +56690,8 @@ Vue.component('chat-form', __webpack_require__(/*! ./components/ChatForm.vue */ 
 var app = new Vue({
   el: '#app',
   data: {
-    messages: []
+    messages: [],
+    id: 1
   },
   mounted: function mounted() {
     var _this = this;

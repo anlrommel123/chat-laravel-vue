@@ -1,8 +1,8 @@
 <template>
     <div class="input-group mb-3">
-        <input type="text" class="form-control" name="message" placeholder="Click to write a message" v-model="newMessage" @keyup.enter="sendMessage" aria-label="Recipient's username" aria-describedby="button-addon2">
+        <input type="text" class="form-control" name="message" placeholder="Click to write a message" v-model="newMessage" @keyup.enter="sendMessage">
             <div class="input-group-append">
-                <button class="btn btn-primary" type="button" id="button-addon2" @click="sendMessage">Send</button>
+                <button class="btn btn-primary" type="button" @click="sendMessage">Send</button>
             </div>
     </div>
 </template>

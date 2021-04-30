@@ -1899,6 +1899,44 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ChatContacts.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ChatContacts.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['id', 'contacts'],
+  methods: {
+    selectContact: function selectContact(to_user_id) {
+      this.$emit('selectedcontact', {
+        user_id: this.id,
+        to_user_id: to_user_id
+      });
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ChatForm.vue?vue&type=script&lang=js&":
 /*!*******************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ChatForm.vue?vue&type=script&lang=js& ***!
@@ -44380,6 +44418,73 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ChatContacts.vue?vue&type=template&id=26c21636&":
+/*!***************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ChatContacts.vue?vue&type=template&id=26c21636& ***!
+  \***************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "card" }, [
+    _vm._m(0),
+    _vm._v(" "),
+    _c("div", { staticClass: "card-body" }, [
+      _c(
+        "ul",
+        { staticClass: "list-group list-group-flush" },
+        _vm._l(_vm.contacts, function(contact, index) {
+          return _c(
+            "li",
+            {
+              key: index,
+              staticClass: "list-group-item",
+              on: {
+                click: function($event) {
+                  return _vm.selectContact(contact.id)
+                }
+              }
+            },
+            [
+              _vm._v(
+                "\n                  " +
+                  _vm._s(contact.name) +
+                  "\n              "
+              )
+            ]
+          )
+        }),
+        0
+      )
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header" }, [
+      _c("input", {
+        staticClass: "form-control",
+        attrs: { type: "text", placeholder: "Search contact" }
+      })
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ChatForm.vue?vue&type=template&id=6fb73fa7&":
 /*!***********************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ChatForm.vue?vue&type=template&id=6fb73fa7& ***!
@@ -44409,9 +44514,7 @@ var render = function() {
       attrs: {
         type: "text",
         name: "message",
-        placeholder: "Click to write a message",
-        "aria-label": "Recipient's username",
-        "aria-describedby": "button-addon2"
+        placeholder: "Click to write a message"
       },
       domProps: { value: _vm.newMessage },
       on: {
@@ -44438,7 +44541,7 @@ var render = function() {
         "button",
         {
           staticClass: "btn btn-primary",
-          attrs: { type: "button", id: "button-addon2" },
+          attrs: { type: "button" },
           on: { click: _vm.sendMessage }
         },
         [_vm._v("Send")]
@@ -56685,18 +56788,24 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js"); //Components
 
+Vue.component('chat-contacts', __webpack_require__(/*! ./components/ChatContacts.vue */ "./resources/js/components/ChatContacts.vue")["default"]);
 Vue.component('chat-messages', __webpack_require__(/*! ./components/ChatMessages.vue */ "./resources/js/components/ChatMessages.vue")["default"]);
 Vue.component('chat-form', __webpack_require__(/*! ./components/ChatForm.vue */ "./resources/js/components/ChatForm.vue")["default"]);
 var app = new Vue({
   el: '#app',
   data: {
+    contacts: [],
     messages: [],
-    id: 1
+    selectedIds: {
+      user_id: null,
+      to_user_id: null
+    }
   },
   mounted: function mounted() {
     var _this = this;
 
-    this.getMessages();
+    this.getContacts(); //this.getMessages()
+
     Echo["private"]('chat').listen('MessageSent', function (e) {
       _this.messages.push({
         message: e.message.message,
@@ -56705,17 +56814,32 @@ var app = new Vue({
     });
   },
   methods: {
-    getMessages: function getMessages() {
+    getMessages: function getMessages(selectedIds) {
       var _this2 = this;
 
-      axios.get('./getMessages').then(function (resp) {
+      this.selectedIds.user_id = selectedIds.user_id;
+      this.selectedIds.to_user_id = selectedIds.to_user_id;
+      axios.post('./getMessages', {
+        user_id: selectedIds.user_id,
+        to_user_id: selectedIds.to_user_id
+      }).then(function (resp) {
         _this2.messages = resp.data;
       });
     },
     addMessage: function addMessage(message) {
       this.messages.push(message);
-      axios.post('./sendMessage', message).then(function (resp) {
+      axios.post('./sendMessage', {
+        to_user_id: this.selectedIds.to_user_id,
+        message: message.message
+      }).then(function (resp) {
         console.log(resp.data);
+      });
+    },
+    getContacts: function getContacts() {
+      var _this3 = this;
+
+      axios.get('./getContacts').then(function (resp) {
+        _this3.contacts = resp.data;
       });
     }
   }
@@ -56770,6 +56894,75 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   cluster: "ap1",
   encrypted: true
 });
+
+/***/ }),
+
+/***/ "./resources/js/components/ChatContacts.vue":
+/*!**************************************************!*\
+  !*** ./resources/js/components/ChatContacts.vue ***!
+  \**************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ChatContacts_vue_vue_type_template_id_26c21636___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ChatContacts.vue?vue&type=template&id=26c21636& */ "./resources/js/components/ChatContacts.vue?vue&type=template&id=26c21636&");
+/* harmony import */ var _ChatContacts_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ChatContacts.vue?vue&type=script&lang=js& */ "./resources/js/components/ChatContacts.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ChatContacts_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ChatContacts_vue_vue_type_template_id_26c21636___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ChatContacts_vue_vue_type_template_id_26c21636___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/ChatContacts.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/ChatContacts.vue?vue&type=script&lang=js&":
+/*!***************************************************************************!*\
+  !*** ./resources/js/components/ChatContacts.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ChatContacts_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./ChatContacts.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ChatContacts.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ChatContacts_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/ChatContacts.vue?vue&type=template&id=26c21636&":
+/*!*********************************************************************************!*\
+  !*** ./resources/js/components/ChatContacts.vue?vue&type=template&id=26c21636& ***!
+  \*********************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ChatContacts_vue_vue_type_template_id_26c21636___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./ChatContacts.vue?vue&type=template&id=26c21636& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ChatContacts.vue?vue&type=template&id=26c21636&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ChatContacts_vue_vue_type_template_id_26c21636___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ChatContacts_vue_vue_type_template_id_26c21636___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
 
 /***/ }),
 

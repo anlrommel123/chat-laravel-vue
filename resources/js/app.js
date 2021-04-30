@@ -12,6 +12,7 @@ window.Vue = require('vue');
 
 
 //Components
+Vue.component('chat-contacts', require('./components/ChatContacts.vue').default);
 Vue.component('chat-messages', require('./components/ChatMessages.vue').default);
 Vue.component('chat-form', require('./components/ChatForm.vue').default);
 
@@ -19,12 +20,17 @@ const app = new Vue({
     el: '#app',
 
     data: {
+        contacts: [],
         messages: [],
-        id: 1
+        selectedIds: {
+            user_id: null,
+            to_user_id: null
+        }
     },
 
     mounted() {
-        this.getMessages()
+        this.getContacts()
+        //this.getMessages()
 
         Echo.private('chat')
         .listen('MessageSent', (e) => {
@@ -36,8 +42,15 @@ const app = new Vue({
     },
 
     methods: {
-        getMessages() {
-            axios.get('./getMessages')
+        getMessages(selectedIds) {  
+
+            this.selectedIds.user_id = selectedIds.user_id
+            this.selectedIds.to_user_id = selectedIds.to_user_id
+            
+            axios.post('./getMessages', {
+                user_id: selectedIds.user_id,
+                to_user_id: selectedIds.to_user_id
+            })
             .then(resp => {
                 this.messages = resp.data
             })
@@ -46,8 +59,19 @@ const app = new Vue({
         addMessage(message) {
             this.messages.push(message)
 
-            axios.post('./sendMessage', message).then(resp => {
+            axios.post('./sendMessage', {
+                to_user_id: this.selectedIds.to_user_id,
+                message: message.message
+            })
+            .then(resp => {
                 console.log(resp.data)
+            })
+        },
+
+        getContacts() {
+            axios.get('./getContacts')
+            .then(resp => {
+                this.contacts = resp.data
             })
         }
 

@@ -2,7 +2,10 @@
 
 @section('content')
     <div class="container">
-        <div class="row justify-content-center">
+        <div class="row">
+            <div class="col-md-3">
+                <chat-contacts @selectedcontact="getMessages" :contacts="contacts" :id="{{ Auth::id() }}" />
+            </div>
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">

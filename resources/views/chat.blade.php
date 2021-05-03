@@ -2,14 +2,14 @@
 
 @section('content')
     <div class="container">
-        <div class="row">
+        <div class="row no-gutters">
             <div class="col-md-3">
-                <chat-contacts @selectedcontact="getMessages" :contacts="contacts" :id="{{ Auth::id() }}" />
+                <chat-contacts @selectedcontact="getMessages" :id="{{ Auth::id() }}" />
             </div>
-            <div class="col-md-8">
+            <div class="col-md-9">
                 <div class="card">
                     <div class="card-header">
-                       <h4>Chats</h4> 
+                       <h4>@{{ selectedIds.to_user_name }}</h4> 
                     </div>
                     <div class="card-body">
                         <chat-messages :messages="messages" :id="{{ Auth::id() }}" />
@@ -22,3 +22,4 @@
         </div>
     </div>
 @endsection  
+

@@ -13,7 +13,7 @@
 
 <style scoped>
     .list-group {
-        height: 400px;
+        height: 300px;
         overflow: auto;
     }
 </style>

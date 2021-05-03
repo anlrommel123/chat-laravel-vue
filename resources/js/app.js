@@ -20,18 +20,15 @@ const app = new Vue({
     el: '#app',
 
     data: {
-        contacts: [],
         messages: [],
         selectedIds: {
             user_id: null,
-            to_user_id: null
+            to_user_id: null,
+            to_user_name: null
         }
     },
 
     mounted() {
-        this.getContacts()
-        //this.getMessages()
-
         Echo.private('chat')
         .listen('MessageSent', (e) => {
             this.messages.push({
@@ -46,6 +43,7 @@ const app = new Vue({
 
             this.selectedIds.user_id = selectedIds.user_id
             this.selectedIds.to_user_id = selectedIds.to_user_id
+            this.selectedIds.to_user_name = selectedIds.to_user_name
             
             axios.post('./getMessages', {
                 user_id: selectedIds.user_id,
@@ -62,16 +60,6 @@ const app = new Vue({
             axios.post('./sendMessage', {
                 to_user_id: this.selectedIds.to_user_id,
                 message: message.message
-            })
-            .then(resp => {
-                console.log(resp.data)
-            })
-        },
-
-        getContacts() {
-            axios.get('./getContacts')
-            .then(resp => {
-                this.contacts = resp.data
             })
         }
 

@@ -54,4 +54,12 @@ class ChatController extends Controller
                     ->get();
     }
 
+    //Search contact
+    public function searchContact(Request $request)
+    {
+        return User::where('id', '!=', Auth::id())
+                    ->where('name', 'like', $request->name.'%')
+                    ->get();
+    }
+
 }

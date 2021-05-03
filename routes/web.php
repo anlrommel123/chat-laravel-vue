@@ -18,3 +18,4 @@ Route::get('/', 'ChatController@index');
 Route::post('getMessages', 'ChatController@getMessages');
 Route::post('sendMessage', 'ChatController@sendMessages');
 Route::get('getContacts', 'ChatController@getContacts');
+Route::get('searchContact', 'ChatController@searchContact');

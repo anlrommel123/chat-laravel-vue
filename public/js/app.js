@@ -1934,8 +1934,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['id'],
+  props: ['id', 'messages', 'selected'],
   data: function data() {
     return {
       name: null,
@@ -1947,28 +1956,36 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     selectContact: function selectContact(to_user_id, to_user_name) {
+      var _this = this;
+
       this.$emit('selectedcontact', {
         user_id: this.id,
         to_user_id: to_user_id,
         to_user_name: to_user_name
       });
+      Echo["private"]("chat.".concat(this.selected.user_id)).listen('MessageSent', function (e) {
+        _this.messages.push({
+          message: e.message.message,
+          user: e.user
+        });
+      });
     },
     searchContact: function searchContact() {
-      var _this = this;
+      var _this2 = this;
 
       axios.get('./searchContact', {
         params: {
           name: this.name
         }
       }).then(function (resp) {
-        _this.contacts = resp.data;
+        _this2.contacts = resp.data;
       });
     },
     getContacts: function getContacts() {
-      var _this2 = this;
+      var _this3 = this;
 
       axios.get('./getContacts').then(function (resp) {
-        _this2.contacts = resp.data;
+        _this3.contacts = resp.data;
       });
     }
   }
@@ -2023,6 +2040,17 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -6503,7 +6531,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.list-group[data-v-26c21636] {\n    height: 375px;\n    overflow: auto;\n}\n", ""]);
+exports.push([module.i, "\n.list-group[data-v-26c21636] {\n    height: 375px;\n    overflow: auto;\n}\n.list-group-item[data-v-26c21636] {\n    border: none !important;\n}\n.list-group-item[data-v-26c21636]:hover {\n    cursor: pointer;\n}\n", ""]);
 
 // exports
 
@@ -6522,7 +6550,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.list-group[data-v-e422daa2] {\n    height: 300px;\n    overflow: auto;\n}\n", ""]);
+exports.push([module.i, "\n#chat-form[data-v-e422daa2] {\n    height: 300px;\n    overflow: auto;\n    overflow-anchor: none;\n}\n.from-me[data-v-e422daa2] {\n    border-radius: 10px;\n    background-color: #1e88e5 !important;\n    color: #fff;\n    max-width: 60%;\n}\n.to-me[data-v-e422daa2] {\n    border-radius: 10px;\n    background-color: #d6d8d9 !important;\n    color: #000;\n    max-width: 60%;\n}\n", ""]);
 
 // exports
 
@@ -44565,8 +44593,12 @@ var render = function() {
                 }
               },
               [
+                _c("img", {
+                  staticClass: "rounded",
+                  attrs: { src: "images/avatar-5.png", alt: "", width: "30" }
+                }),
                 _vm._v(
-                  "\n                  " +
+                  " \n                  " +
                     _vm._s(contact.name) +
                     "\n              "
                 )
@@ -44688,28 +44720,34 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "ul",
-    { staticClass: "list-group" },
+    "div",
+    { attrs: { id: "chat-form" } },
     _vm._l(_vm.messages, function(message, index) {
       return _c(
-        "li",
+        "div",
         {
           key: index,
-          staticClass: "list-group-item",
-          class: { "text-primary": _vm.id === message.user.id }
+          staticClass: "d-flex flex-row bd-highlight mb-3 message-body",
+          class: { "flex-row-reverse": _vm.id === message.user.id }
         },
         [
-          _c("div", { staticClass: "message-name" }, [
-            _c("strong", [
-              _vm._v(
-                _vm._s(_vm.id === message.user.id ? "You" : message.user.name)
-              )
-            ])
+          _c("div", { staticClass: "p-1" }, [
+            _vm.id != message.user.id
+              ? _c("img", {
+                  staticClass: "rounded",
+                  attrs: { src: "images/avatar-5.png", alt: "", width: "30" }
+                })
+              : _vm._e()
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "message-body" }, [
-            _vm._v("\n            " + _vm._s(message.message) + "\n        ")
-          ])
+          _c(
+            "div",
+            {
+              staticClass: "p-2",
+              class: _vm.id === message.user.id ? "from-me" : "to-me"
+            },
+            [_vm._v(_vm._s(message.message))]
+          )
         ]
       )
     }),
@@ -56909,6 +56947,7 @@ Vue.component('chat-messages', __webpack_require__(/*! ./components/ChatMessages
 Vue.component('chat-form', __webpack_require__(/*! ./components/ChatForm.vue */ "./resources/js/components/ChatForm.vue")["default"]);
 var app = new Vue({
   el: '#app',
+  name: 'app',
   data: {
     messages: [],
     selectedIds: {
@@ -56917,19 +56956,9 @@ var app = new Vue({
       to_user_name: null
     }
   },
-  mounted: function mounted() {
-    var _this = this;
-
-    Echo["private"]('chat').listen('MessageSent', function (e) {
-      _this.messages.push({
-        message: e.message.message,
-        user: e.user
-      });
-    });
-  },
   methods: {
     getMessages: function getMessages(selectedIds) {
-      var _this2 = this;
+      var _this = this;
 
       this.selectedIds.user_id = selectedIds.user_id;
       this.selectedIds.to_user_id = selectedIds.to_user_id;
@@ -56938,7 +56967,7 @@ var app = new Vue({
         user_id: selectedIds.user_id,
         to_user_id: selectedIds.to_user_id
       }).then(function (resp) {
-        _this2.messages = resp.data;
+        _this.messages = resp.data;
       });
     },
     addMessage: function addMessage(message) {

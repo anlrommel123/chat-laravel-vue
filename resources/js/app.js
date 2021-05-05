@@ -18,7 +18,7 @@ Vue.component('chat-form', require('./components/ChatForm.vue').default);
 
 const app = new Vue({
     el: '#app',
-
+    name: 'app',
     data: {
         messages: [],
         selectedIds: {
@@ -26,16 +26,6 @@ const app = new Vue({
             to_user_id: null,
             to_user_name: null
         }
-    },
-
-    mounted() {
-        Echo.private('chat')
-        .listen('MessageSent', (e) => {
-            this.messages.push({
-                message: e.message.message,
-                user: e.user
-            });
-        });
     },
 
     methods: {

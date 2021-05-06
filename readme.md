@@ -1,1 +1,1 @@
-## Chat Web App using Laravel + Vue
+## WebChat using Laravel + Vue with Pusher

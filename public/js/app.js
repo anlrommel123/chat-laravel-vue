@@ -1948,7 +1948,8 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       name: null,
-      contacts: []
+      contacts: [],
+      subscribedChannel: null
     };
   },
   mounted: function mounted() {
@@ -1963,7 +1964,13 @@ __webpack_require__.r(__webpack_exports__);
         to_user_id: to_user_id,
         to_user_name: to_user_name
       });
-      Echo["private"]("chat.".concat(this.selected.user_id)).listen('MessageSent', function (e) {
+      this.subscribedChannel ? Echo.leave("chat.".concat(this.subscribedChannel.user_id, ".").concat(this.subscribedChannel.to_user_id)) : '';
+      this.subscribedChannel = {
+        user_id: this.id,
+        to_user_id: to_user_id
+      }; //Subcribe to channel
+
+      Echo["private"]("chat.".concat(this.selected.user_id, ".").concat(this.selected.to_user_id)).listen('MessageSent', function (e) {
         _this.messages.push({
           message: e.message.message,
           user: e.user
@@ -2040,6 +2047,9 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
 //
 //
 //
@@ -6550,7 +6560,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n#chat-form[data-v-e422daa2] {\n    height: 300px;\n    overflow: auto;\n    overflow-anchor: none;\n}\n.from-me[data-v-e422daa2] {\n    border-radius: 10px;\n    background-color: #1e88e5 !important;\n    color: #fff;\n    max-width: 60%;\n}\n.to-me[data-v-e422daa2] {\n    border-radius: 10px;\n    background-color: #d6d8d9 !important;\n    color: #000;\n    max-width: 60%;\n}\n", ""]);
+exports.push([module.i, "\n#chat-form[data-v-e422daa2] {\n    height: 300px;\n    overflow: auto;\n    display: flex;\n    flex-direction: column-reverse;\n}\n.from-me[data-v-e422daa2] {\n    border-radius: 10px;\n    background-color: #1e88e5 !important;\n    color: #fff;\n    max-width: 60%;\n}\n.to-me[data-v-e422daa2] {\n    border-radius: 10px;\n    background-color: #d6d8d9 !important;\n    color: #000;\n    max-width: 60%;\n}\n", ""]);
 
 // exports
 
@@ -44719,40 +44729,41 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { attrs: { id: "chat-form" } },
-    _vm._l(_vm.messages, function(message, index) {
-      return _c(
-        "div",
-        {
-          key: index,
-          staticClass: "d-flex flex-row bd-highlight mb-3 message-body",
-          class: { "flex-row-reverse": _vm.id === message.user.id }
-        },
-        [
-          _c("div", { staticClass: "p-1" }, [
-            _vm.id != message.user.id
-              ? _c("img", {
-                  staticClass: "rounded",
-                  attrs: { src: "images/avatar-5.png", alt: "", width: "30" }
-                })
-              : _vm._e()
-          ]),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              staticClass: "p-2",
-              class: _vm.id === message.user.id ? "from-me" : "to-me"
-            },
-            [_vm._v(_vm._s(message.message))]
-          )
-        ]
-      )
-    }),
-    0
-  )
+  return _c("div", { attrs: { id: "chat-form" } }, [
+    _c(
+      "div",
+      _vm._l(_vm.messages, function(message, index) {
+        return _c(
+          "div",
+          {
+            key: index,
+            staticClass: "d-flex flex-row bd-highlight mb-3 message-body",
+            class: { "flex-row-reverse": _vm.id === message.user.id }
+          },
+          [
+            _c("div", { staticClass: "p-1" }, [
+              _vm.id != message.user.id
+                ? _c("img", {
+                    staticClass: "rounded",
+                    attrs: { src: "images/avatar-5.png", alt: "", width: "30" }
+                  })
+                : _vm._e()
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "p-2",
+                class: _vm.id === message.user.id ? "from-me" : "to-me"
+              },
+              [_vm._v(_vm._s(message.message))]
+            )
+          ]
+        )
+      }),
+      0
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true

@@ -40,7 +40,8 @@ export default {
     data() {
         return {
             name: null,
-            contacts: []
+            contacts: [],
+            subscribedChannel: null
         }
     },
     
@@ -50,20 +51,29 @@ export default {
 
     methods: {
         selectContact(to_user_id, to_user_name) {
-            
+
             this.$emit('selectedcontact', {
                 user_id: this.id,
                 to_user_id: to_user_id,
                 to_user_name: to_user_name
             })
+                
+                this.subscribedChannel ? Echo.leave(`chat.${this.subscribedChannel.user_id}.${this.subscribedChannel.to_user_id}`) : ''
 
-            Echo.private(`chat.${this.selected.user_id}`)
-            .listen('MessageSent', (e) => {
-                this.messages.push({
-                    message: e.message.message,
-                    user: e.user
+                this.subscribedChannel = {
+                    user_id: this.id,
+                    to_user_id: to_user_id
+                }
+
+                //Subcribe to channel
+                Echo.private(`chat.${this.selected.user_id}.${this.selected.to_user_id}`)
+                .listen('MessageSent', (e) => {
+                    this.messages.push({
+                        message: e.message.message,
+                        user: e.user
+                    })
                 })
-            });
+
         },
 
         searchContact() {
